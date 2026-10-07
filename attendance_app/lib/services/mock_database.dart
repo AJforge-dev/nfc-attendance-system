@@ -1,0 +1,365 @@
+import '../models/user.dart';
+import '../models/attendance_record.dart';
+import '../models/session.dart';
+import '../models/leave_request.dart';
+import '../models/condonation.dart';
+import '../models/mark.dart';
+import '../models/device.dart';
+
+class MockDatabase {
+  static final String orgId = 'cit_chennai';
+
+  static final List<UserModel> initialUsers = [
+    UserModel(
+      id: 'std_priya',
+      orgId: orgId,
+      name: 'Priya Sharma',
+      email: 'priya.s@cit.edu.in',
+      role: UserRole.student,
+      rollNumber: '21CS042',
+      department: 'Computer Science & Engineering',
+      tagUid: '4A7B12C9',
+      semester: 6,
+      currentAttendancePercent: 88,
+      lastAlertLevel: 100,
+      dob: DateTime(2003, 5, 14),
+      password: 'password123',
+    ),
+    UserModel(
+      id: 'std_karthik',
+      orgId: orgId,
+      name: 'Karthik Rajan',
+      email: 'karthik.r@cit.edu.in',
+      role: UserRole.student,
+      rollNumber: '21CS088',
+      department: 'Computer Science & Engineering',
+      tagUid: '5F8E21B0',
+      semester: 6,
+      currentAttendancePercent: 71, // Below 75% -> Needs Condonation!
+      lastAlertLevel: 70,
+      dob: DateTime(2003, 8, 22),
+      password: 'password123',
+    ),
+    UserModel(
+      id: 'std_ananya',
+      orgId: orgId,
+      name: 'Ananya Krishnan',
+      email: 'ananya.k@cit.edu.in',
+      role: UserRole.student,
+      rollNumber: '21CS014',
+      department: 'Computer Science & Engineering',
+      tagUid: '7C9A34D1',
+      semester: 6,
+      currentAttendancePercent: 79, // Borderline!
+      lastAlertLevel: 80,
+      dob: DateTime(2003, 11, 30),
+      password: 'password123',
+    ),
+    UserModel(
+      id: 'fac_sundar',
+      orgId: orgId,
+      name: 'Dr. Sundar Raman',
+      email: 'sundar.r@cit.edu.in',
+      role: UserRole.faculty,
+      department: 'Computer Science & Engineering',
+      designation: 'Associate Professor',
+    ),
+    UserModel(
+      id: 'adv_meenakshi',
+      orgId: orgId,
+      name: 'Prof. Meenakshi Sundaram',
+      email: 'meenakshi.s@cit.edu.in',
+      role: UserRole.advisor,
+      department: 'Computer Science & Engineering',
+      designation: 'Class Advisor (CSE Year 3)',
+    ),
+    UserModel(
+      id: 'hod_vijay',
+      orgId: orgId,
+      name: 'Dr. K. R. Vijayakumar',
+      email: 'hod.cse@cit.edu.in',
+      role: UserRole.hod,
+      department: 'Computer Science & Engineering',
+      designation: 'Head of Department',
+    ),
+    UserModel(
+      id: 'adm_admin',
+      orgId: orgId,
+      name: 'Campus Admin',
+      email: 'admin@cit.edu.in',
+      role: UserRole.admin,
+      department: 'IT Operations',
+      designation: 'System Administrator',
+    ),
+  ];
+
+  static final List<SubjectModel> initialSubjects = [
+    SubjectModel(
+      id: 'sub_cs8491',
+      orgId: orgId,
+      code: 'CS8491',
+      name: 'Data Structures & Algorithms',
+      department: 'Computer Science & Engineering',
+      facultyId: 'fac_sundar',
+      facultyName: 'Dr. Sundar Raman',
+    ),
+    SubjectModel(
+      id: 'sub_cs8492',
+      orgId: orgId,
+      code: 'CS8492',
+      name: 'Operating Systems',
+      department: 'Computer Science & Engineering',
+      facultyId: 'fac_sundar',
+      facultyName: 'Dr. Sundar Raman',
+    ),
+    SubjectModel(
+      id: 'sub_cs8493',
+      orgId: orgId,
+      code: 'CS8493',
+      name: 'Database Management Systems',
+      department: 'Computer Science & Engineering',
+      facultyId: 'adv_meenakshi',
+      facultyName: 'Prof. Meenakshi Sundaram',
+    ),
+    SubjectModel(
+      id: 'sub_cs8494',
+      orgId: orgId,
+      code: 'CS8494',
+      name: 'Computer Networks',
+      department: 'Computer Science & Engineering',
+      facultyId: 'adv_meenakshi',
+      facultyName: 'Prof. Meenakshi Sundaram',
+    ),
+  ];
+
+  static final List<DeviceModel> initialDevices = [
+    DeviceModel(
+      id: 'ESP32_ROOM_302',
+      orgId: orgId,
+      room: 'LH-302',
+      token: 'dvt_live_9a8b7c6d5e4f3a2b1c',
+      status: 'online',
+      lastHeartbeat: DateTime.now().subtract(const Duration(seconds: 40)),
+      rssi: -58,
+      queueSize: 0,
+    ),
+    DeviceModel(
+      id: 'ESP32_ROOM_204',
+      orgId: orgId,
+      room: 'LH-204',
+      token: 'dvt_live_1f2e3d4c5b6a798877',
+      status: 'online',
+      lastHeartbeat: DateTime.now().subtract(const Duration(seconds: 70)),
+      rssi: -66,
+      queueSize: 0,
+    ),
+    DeviceModel(
+      id: 'ESP32_LAB_01',
+      orgId: orgId,
+      room: 'CSE-LAB-1',
+      token: 'dvt_live_3c4d5e6f7a8b9c0d1e',
+      status: 'online',
+      lastHeartbeat: DateTime.now().subtract(const Duration(seconds: 15)),
+      rssi: -52,
+      queueSize: 0,
+    ),
+  ];
+
+  static final List<SessionModel> initialSessions = [
+    SessionModel(
+      id: 'sess_live_1',
+      orgId: orgId,
+      subjectId: 'sub_cs8491',
+      subjectCode: 'CS8491',
+      subjectName: 'Data Structures & Algorithms',
+      facultyId: 'fac_sundar',
+      facultyName: 'Dr. Sundar Raman',
+      room: 'LH-302',
+      startTime: DateTime.now().subtract(const Duration(minutes: 8)),
+      endTime: DateTime.now().add(const Duration(minutes: 42)),
+      status: SessionStatus.active,
+    ),
+    SessionModel(
+      id: 'sess_prev_1',
+      orgId: orgId,
+      subjectId: 'sub_cs8492',
+      subjectCode: 'CS8492',
+      subjectName: 'Operating Systems',
+      facultyId: 'fac_sundar',
+      facultyName: 'Dr. Sundar Raman',
+      room: 'LH-302',
+      startTime: DateTime.now().subtract(const Duration(hours: 3)),
+      endTime: DateTime.now().subtract(const Duration(hours: 2)),
+      status: SessionStatus.completed,
+    ),
+    SessionModel(
+      id: 'sess_prev_2',
+      orgId: orgId,
+      subjectId: 'sub_cs8493',
+      subjectCode: 'CS8493',
+      subjectName: 'Database Management Systems',
+      facultyId: 'adv_meenakshi',
+      facultyName: 'Prof. Meenakshi Sundaram',
+      room: 'LH-204',
+      startTime: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
+      endTime: DateTime.now().subtract(const Duration(days: 1, hours: 1)),
+      status: SessionStatus.completed,
+    ),
+  ];
+
+  static final List<AttendanceRecord> initialAttendance = [
+    // Priya: mostly present
+    AttendanceRecord(
+      id: 'att_1',
+      orgId: orgId,
+      sessionId: 'sess_prev_1',
+      studentId: 'std_priya',
+      status: AttendanceStatus.present,
+      scanTime: DateTime.now().subtract(const Duration(hours: 2, minutes: 56)),
+      deviceId: 'ESP32_ROOM_302',
+      recordedAt: DateTime.now().subtract(const Duration(hours: 2, minutes: 56)),
+    ),
+    AttendanceRecord(
+      id: 'att_2',
+      orgId: orgId,
+      sessionId: 'sess_prev_2',
+      studentId: 'std_priya',
+      status: AttendanceStatus.present,
+      scanTime: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 55)),
+      deviceId: 'ESP32_ROOM_204',
+      recordedAt: DateTime.now().subtract(const Duration(days: 1, hours: 1, minutes: 55)),
+    ),
+    // Karthik: has lates and absences
+    AttendanceRecord(
+      id: 'att_3',
+      orgId: orgId,
+      sessionId: 'sess_prev_1',
+      studentId: 'std_karthik',
+      status: AttendanceStatus.late,
+      scanTime: DateTime.now().subtract(const Duration(hours: 2, minutes: 44)), // 16 min late
+      deviceId: 'ESP32_ROOM_302',
+      recordedAt: DateTime.now().subtract(const Duration(hours: 2, minutes: 44)),
+    ),
+    AttendanceRecord(
+      id: 'att_4',
+      orgId: orgId,
+      sessionId: 'sess_prev_2',
+      studentId: 'std_karthik',
+      status: AttendanceStatus.absent,
+      recordedAt: DateTime.now().subtract(const Duration(days: 1, hours: 1)),
+    ),
+  ];
+
+  static final List<LeaveRequestModel> initialLeaveRequests = [
+    LeaveRequestModel(
+      id: 'leave_1',
+      orgId: orgId,
+      studentId: 'std_priya',
+      studentName: 'Priya Sharma',
+      rollNumber: '21CS042',
+      advisorId: 'adv_meenakshi',
+      type: LeaveType.leave,
+      startDate: DateTime.now().subtract(const Duration(days: 5)),
+      endDate: DateTime.now().subtract(const Duration(days: 4)),
+      reason: 'Fever and doctor recommended rest',
+      status: RequestStatus.approved,
+      remark: 'Approved by Advisor with medical certificate verification',
+      createdAt: DateTime.now().subtract(const Duration(days: 6)),
+    ),
+    LeaveRequestModel(
+      id: 'leave_2',
+      orgId: orgId,
+      studentId: 'std_karthik',
+      studentName: 'Karthik Rajan',
+      rollNumber: '21CS088',
+      advisorId: 'adv_meenakshi',
+      type: LeaveType.od,
+      startDate: DateTime.now().add(const Duration(days: 2)),
+      endDate: DateTime.now().add(const Duration(days: 3)),
+      reason: 'IIT Madras Shaastra Hackathon participation',
+      status: RequestStatus.pending,
+      createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+    ),
+  ];
+
+  static final List<CondonationModel> initialCondonations = [
+    CondonationModel(
+      id: 'cond_1',
+      orgId: orgId,
+      studentId: 'std_karthik',
+      studentName: 'Karthik Rajan',
+      rollNumber: '21CS088',
+      subjectId: 'sub_cs8491',
+      subjectName: 'Data Structures & Algorithms',
+      currentPercentage: 71.0,
+      reason: 'Hospitalized for acute dengue for 10 days in August.',
+      documentUrl: 'https://cit.edu.in/docs/medical_cert_karthik.pdf',
+      documentFileName: 'Apollo_Hospital_Discharge_Summary.pdf',
+      status: RequestStatus.pending,
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    ),
+  ];
+
+  static final List<MarkModel> initialMarks = [
+    MarkModel(
+      id: 'mk_1',
+      orgId: orgId,
+      studentId: 'std_priya',
+      subjectId: 'sub_cs8491',
+      subjectName: 'Data Structures & Algorithms',
+      examType: 'Internal 1',
+      marksObtained: 46.0,
+      maxMarks: 50.0,
+      recordedAt: DateTime.now().subtract(const Duration(days: 10)),
+    ),
+    MarkModel(
+      id: 'mk_2',
+      orgId: orgId,
+      studentId: 'std_priya',
+      subjectId: 'sub_cs8492',
+      subjectName: 'Operating Systems',
+      examType: 'Internal 1',
+      marksObtained: 44.0,
+      maxMarks: 50.0,
+      recordedAt: DateTime.now().subtract(const Duration(days: 10)),
+    ),
+    MarkModel(
+      id: 'mk_3',
+      orgId: orgId,
+      studentId: 'std_karthik',
+      subjectId: 'sub_cs8491',
+      subjectName: 'Data Structures & Algorithms',
+      examType: 'Internal 1',
+      marksObtained: 22.0,
+      maxMarks: 50.0,
+      recordedAt: DateTime.now().subtract(const Duration(days: 10)),
+    ),
+  ];
+
+  static final List<AnomalyModel> initialAnomalies = [
+    AnomalyModel(
+      id: 'anom_1',
+      orgId: orgId,
+      type: 'rapid_scans',
+      tagUid: '5F8E21B0',
+      studentName: 'Karthik Rajan',
+      rollNumber: '21CS088',
+      deviceId: 'ESP32_ROOM_302',
+      room: 'LH-302',
+      details: 'Scanned in LH-302 and LH-204 within 42 seconds (impossible travel speed).',
+      timestamp: DateTime.now().subtract(const Duration(hours: 4, minutes: 12)),
+      reviewed: false,
+    ),
+    AnomalyModel(
+      id: 'anom_2',
+      orgId: orgId,
+      type: 'odd_hours',
+      tagUid: '9B4C12AA',
+      deviceId: 'ESP32_ROOM_204',
+      room: 'LH-204',
+      details: 'NFC tap detected at 11:42 PM outside scheduled college hours.',
+      timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 14)),
+      reviewed: false,
+    ),
+  ];
+}

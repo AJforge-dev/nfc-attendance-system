@@ -1,0 +1,36 @@
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Flutter and Dart
+attendance_app/.dart_tool/
+attendance_app/.flutter-plugins
+attendance_app/.flutter-plugins-dependencies
+attendance_app/.pub-cache/
+attendance_app/.pub/
+attendance_app/build/
+attendance_app/.idea/
+attendance_app/*.iml
+attendance_app/.widget_preview/
+**/doc/api/
+
+# Android build artifacts
+attendance_app/android/app/debug
+attendance_app/android/app/profile
+attendance_app/android/app/release
+attendance_app/android/.gradle/
+attendance_app/android/local.properties
+
+# Cloud Functions and Node
+node_modules/
+functions/node_modules/
+functions/lib/
+*.log
+
+# Legacy/unrelated local scratch
+love/

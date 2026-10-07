@@ -1,0 +1,177 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isOrgMember(orgId) {
+      return isAuthenticated() && (
+        getUserData().orgId == orgId ||
+        request.auth.token.orgId == orgId
+      );
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && (
+        getUserData().role == role ||
+        request.auth.token.role == role
+      );
+    }
+
+    function isAnyRole(roles) {
+      return isAuthenticated() && (
+        getUserData().role in roles ||
+        request.auth.token.role in roles
+      );
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isHOD() {
+      return isAnyRole(['admin', 'hod']);
+    }
+
+    function isAdvisor() {
+      return isAnyRole(['admin', 'hod', 'advisor']);
+    }
+
+    function isFaculty() {
+      return isAnyRole(['admin', 'hod', 'advisor', 'faculty']);
+    }
+
+    function isSelf(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Organization configuration & settings
+    match /orgs/{orgId} {
+      allow read: if isOrgMember(orgId);
+      allow write: if isOrgMember(orgId) && isAdmin();
+
+      match /settings/{settingId} {
+        allow read: if isOrgMember(orgId);
+        allow write: if isOrgMember(orgId) && isAdmin();
+      }
+    }
+
+    // Users Collection (students, faculty, advisor, hod, admin)
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isSelf(userId) || isFaculty());
+      // Admin can manage all; user can update their personal preferences (fcmToken, theme, lang)
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isSelf(userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'orgId', 'tagUid'])
+      );
+    }
+
+    // Hardware NFC Readers / Devices
+    match /devices/{deviceId} {
+      allow read: if isFaculty();
+      allow write: if isAdmin();
+    }
+
+    // Academic Subjects & Curriculum
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdvisor();
+    }
+
+    // Timetable & Generated Class Sessions
+    match /timetable/{entryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdvisor();
+    }
+
+    match /sessions/{sessionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isFaculty();
+      allow delete: if isAdmin();
+    }
+
+    // Attendance Records:
+    // Attendance is created primarily by Cloud Functions (via ESP32 scan)
+    // Staff can read class attendance; students can read only their own
+    match /attendance/{attendanceId} {
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid ||
+        isFaculty()
+      );
+      // Faculty/Admin can manually update or override in exceptional cases
+      allow create, update: if isFaculty();
+      allow delete: if isAdmin();
+    }
+
+    // Leave & On-Duty (OD) Requests
+    match /leaveRequests/{requestId} {
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid ||
+        isAdvisor()
+      );
+      // Student creates request
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      // Advisor / HOD / Admin approves or rejects
+      allow update: if isAdvisor();
+      allow delete: if isAdmin();
+    }
+
+    // Condonation Applications (for low attendance exemption)
+    match /condonations/{condonationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid ||
+        isHOD()
+      );
+      // Student submits condonation with medical / special reason document
+      allow create: if isAuthenticated() && request.resource.data.studentId == request.auth.uid;
+      // Only HOD or Admin can approve/reject
+      allow update: if isHOD();
+      allow delete: if isAdmin();
+    }
+
+    // Internal Marks & Assessment Scores
+    match /marks/{markId} {
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid ||
+        isFaculty()
+      );
+      allow write: if isFaculty();
+    }
+
+    // Notifications & Alert Thresholds
+    match /alerts/{alertId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid; // mark as read
+      allow create, delete: if isFaculty();
+    }
+
+    // Predictive Risk Scores (Low, Medium, High)
+    match /riskScores/{riskId} {
+      allow read: if isAdvisor();
+      allow write: if isAdmin();
+    }
+
+    // Security Anomalies (Rapid scans, odd hours, wrong room)
+    match /anomalies/{anomalyId} {
+      allow read: if isHOD();
+      allow write: if isAdmin();
+    }
+
+    // System Audit Log
+    match /auditLog/{logId} {
+      allow read: if isAdmin();
+      allow write: if false; // Append-only via Cloud Functions
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "org": {
+    "id": "chennai_tech_univ",
+    "name": "Chennai Institute of Technology",
+    "code": "CIT",
+    "settings": {
+      "lateWindowMinutes": 10,
+      "attendanceLimit": 75,
+      "alertLevels": [80, 75, 70],
+      "latesPerAbsence": 3
+    }
+  },
+  "users": [
+    {
+      "id": "std_priya",
+      "orgId": "chennai_tech_univ",
+      "name": "Priya Sharma",
+      "email": "priya.s@cit.edu.in",
+      "role": "student",
+      "rollNumber": "21CS042",
+      "department": "Computer Science & Engineering",
+      "semester": 6,
+      "tagUid": "4A7B12C9",
+      "advisorId": "adv_meenakshi"
+    },
+    {
+      "id": "std_karthik",
+      "orgId": "chennai_tech_univ",
+      "name": "Karthik Rajan",
+      "email": "karthik.r@cit.edu.in",
+      "role": "student",
+      "rollNumber": "21CS088",
+      "department": "Computer Science & Engineering",
+      "semester": 6,
+      "tagUid": "5F8E21B0",
+      "advisorId": "adv_meenakshi"
+    },
+    {
+      "id": "std_ananya",
+      "orgId": "chennai_tech_univ",
+      "name": "Ananya Krishnan",
+      "email": "ananya.k@cit.edu.in",
+      "role": "student",
+      "rollNumber": "21CS014",
+      "department": "Computer Science & Engineering",
+      "semester": 6,
+      "tagUid": "7C9A34D1",
+      "advisorId": "adv_meenakshi"
+    },
+    {
+      "id": "fac_sundar",
+      "orgId": "chennai_tech_univ",
+      "name": "Dr. Sundar Raman",
+      "email": "sundar.r@cit.edu.in",
+      "role": "faculty",
+      "department": "Computer Science & Engineering",
+      "designation": "Associate Professor"
+    },
+    {
+      "id": "adv_meenakshi",
+      "orgId": "chennai_tech_univ",
+      "name": "Prof. Meenakshi Sundaram",
+      "email": "meenakshi.s@cit.edu.in",
+      "role": "advisor",
+      "department": "Computer Science & Engineering",
+      "designation": "Class Advisor (CSE Year 3)"
+    },
+    {
+      "id": "hod_vijay",
+      "orgId": "chennai_tech_univ",
+      "name": "Dr. K. R. Vijayakumar",
+      "email": "hod.cse@cit.edu.in",
+      "role": "hod",
+      "department": "Computer Science & Engineering",
+      "designation": "Head of the Department"
+    },
+    {
+      "id": "adm_admin",
+      "orgId": "chennai_tech_univ",
+      "name": "Campus Administrator",
+      "email": "admin@cit.edu.in",
+      "role": "admin",
+      "department": "IT Operations"
+    }
+  ],
+  "devices": [
+    {
+      "id": "ESP32_ROOM_302",
+      "orgId": "chennai_tech_univ",
+      "room": "LH-302",
+      "token": "dvt_live_9a8b7c6d5e4f3a2b1c",
+      "status": "online",
+      "lastHeartbeat": 1727951234000,
+      "rssi": -58,
+      "queueSize": 0
+    },
+    {
+      "id": "ESP32_ROOM_204",
+      "orgId": "chennai_tech_univ",
+      "room": "LH-204",
+      "token": "dvt_live_1f2e3d4c5b6a798877",
+      "status": "online",
+      "lastHeartbeat": 1727951210000,
+      "rssi": -65,
+      "queueSize": 0
+    }
+  ],
+  "subjects": [
+    { "id": "sub_cs8491", "orgId": "chennai_tech_univ", "code": "CS8491", "name": "Data Structures & Algorithms", "facultyId": "fac_sundar" },
+    { "id": "sub_cs8492", "orgId": "chennai_tech_univ", "code": "CS8492", "name": "Operating Systems", "facultyId": "fac_sundar" },
+    { "id": "sub_cs8493", "orgId": "chennai_tech_univ", "code": "CS8493", "name": "Database Management Systems", "facultyId": "adv_meenakshi" },
+    { "id": "sub_cs8494", "orgId": "chennai_tech_univ", "code": "CS8494", "name": "Computer Networks", "facultyId": "adv_meenakshi" }
+  ]
+}
